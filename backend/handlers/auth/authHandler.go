@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"house-manager-backend/dal"
 	"net/http"
 	"time"
 
@@ -59,6 +60,35 @@ func GenerateJWT(w http.ResponseWriter, r *http.Request) {
 		AccessToken:  accessTokenString,
 		RefreshToken: refreshTokenString,
 	})
+}
+
+func CreateUser(w http.ResponseWriter, r *http.Request) {
+	var requestBody struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+		Email    string `json:"email"`
+	}
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil || requestBody.Username == "" {
+		http.Error(w, "Missing or invalid Username", http.StatusBadRequest)
+		return
+	} else if requestBody.Password == "" {
+		http.Error(w, "Missing or invalid Password", http.StatusBadRequest)
+		return
+	} else if requestBody.Email == "" {
+		http.Error(w, "Missing or invalid Email", http.StatusBadRequest)
+		return
+	}
+	createUser := dal.CreateUser(requestBody.Username, requestBody.Password, requestBody.Email)
+
+	if createUser != nil {
+		w.Header().Set("WWW-Authenticate", "Basic realm=\"Restricted\"")
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(w, "Unauthorized: Missing or invalid credentials")
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "Success")
 }
 
 func RefreshToken(w http.ResponseWriter, r *http.Request) {
