@@ -9,4 +9,5 @@ require (
 	github.com/go-sql-driver/mysql v1.9.2 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
+	golang.org/x/crypto v0.37.0 // indirect
 )

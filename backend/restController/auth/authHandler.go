@@ -19,25 +19,25 @@ type Response struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
+type SignupResponse struct {
+	RedirectTo string `json:"redirectTo,omitempty"`
+	Error      string `json:"error,omitempty"`
+}
 
-// GenerateJWT generates both the Access Token and Refresh Token
 func GenerateJWT(w http.ResponseWriter, r *http.Request) {
-	// Simulate login and generate a username (in real apps, authenticate the user)
+
 	username := "user1"
 
-	// Claims for Access Token (short expiry time)
 	accessClaims := jwt.MapClaims{
 		"username": username,
 		"exp":      time.Now().Add(time.Minute * 15).Unix(), // Access token expires in 15 minutes
 	}
 
-	// Claims for Refresh Token (long expiry time)
 	refreshClaims := jwt.MapClaims{
 		"username": username,
 		"exp":      time.Now().Add(time.Hour * 24 * 7).Unix(), // Refresh token expires in 7 days
 	}
 
-	// Create Access Token
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, accessClaims)
 	accessTokenString, err := accessToken.SignedString(jwtSecret)
 	if err != nil {
@@ -45,7 +45,6 @@ func GenerateJWT(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create Refresh Token
 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims)
 	refreshTokenString, err := refreshToken.SignedString(refreshSecret)
 	if err != nil {
@@ -53,7 +52,6 @@ func GenerateJWT(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Send both tokens in the response
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(Response{
@@ -83,12 +81,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	if createUser != nil {
 		w.Header().Set("WWW-Authenticate", "Basic realm=\"Restricted\"")
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintf(w, "Unauthorized: Missing or invalid credentials")
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Internal Server Error ")
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Success")
+	resp := SignupResponse{RedirectTo: "/"}
+	json.NewEncoder(w).Encode(resp)
 }
 
 func RefreshToken(w http.ResponseWriter, r *http.Request) {

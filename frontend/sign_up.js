@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       } 
 
-      console.log(username, password, confirmPassword, email);
       createUser(username,password,email);
     });
   } else {
@@ -29,7 +28,7 @@ async function createUser(username, password, email) {
   };
   
   try {
-    const response = await fetch('http://localhost:8080/createUser', {
+    const response = await fetch('http://localhost:8000/createUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,6 +42,8 @@ async function createUser(username, password, email) {
 
     const result = await response.json();
     console.log(result);
+    window.location.href = result.redirectTo;
+
   } catch (error) {
     console.error('Problem with creation:', error);
   }
