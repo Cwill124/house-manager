@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <script type='module' src='/static/authView/scripts/index.js'></script>
 </head>
 <body>
     <h2>Login</h2>
-    <form action="http://localhost:8080/login" method="get">
+    <form id='login-form'>
         <label for="username">Username:</label><br>
         <input type="text" id="username" name="username" required><br><br>
 
@@ -15,6 +16,6 @@
 
         <button type="submit">Login</button>
     </form>
-    <a href="./sign_up.html">Sign up</a>
+    <p>Don't have an account? <a href="/sign-up">Sign up</a></p>
 </body>
 </html>

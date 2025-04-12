@@ -26,7 +26,26 @@ type SignupResponse struct {
 
 func GenerateJWT(w http.ResponseWriter, r *http.Request) {
 
-	username := "user1"
+	var requestBody struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil || requestBody.Username == "" {
+		http.Error(w, "Missing or invalid Username", http.StatusBadRequest)
+		return
+	} else if requestBody.Password == "" {
+		http.Error(w, "Missing or invalid Password", http.StatusBadRequest)
+		return
+	}
+
+	user, loginError := dal.UserLogin(requestBody.Username, requestBody.Password)
+	if loginError != nil {
+		http.Error(w, "Username or password is incorrect", http.StatusBadRequest)
+		return
+	}
+	username := user.Username
 
 	accessClaims := jwt.MapClaims{
 		"username": username,
@@ -80,6 +99,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	createUser := dal.CreateUser(requestBody.Username, requestBody.Password, requestBody.Email)
 
 	if createUser != nil {
+    fmt.Println(createUser.Error())
 		w.Header().Set("WWW-Authenticate", "Basic realm=\"Restricted\"")
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal Server Error ")

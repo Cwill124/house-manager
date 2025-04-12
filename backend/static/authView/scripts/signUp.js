@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const form = document.getElementById('sign-up-form');
+handleSignUpForm();  
+});
+
+function handleSignUpForm(){
+const form = document.getElementById('sign-up-form');
   if (form) {
     form.addEventListener('submit', function(event) {
       event.preventDefault();
@@ -18,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     console.error("Form not found");
   }
-});
+}
 
 async function createUser(username, password, email) {
   const data = {
@@ -28,7 +32,7 @@ async function createUser(username, password, email) {
   };
   
   try {
-    const response = await fetch('http://localhost:8000/createUser', {
+    const response = await fetch('/api/createUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +45,7 @@ async function createUser(username, password, email) {
     }
 
     const result = await response.json();
-    console.log(result);
+    alert('Account created.');
     window.location.href = result.redirectTo;
 
   } catch (error) {
