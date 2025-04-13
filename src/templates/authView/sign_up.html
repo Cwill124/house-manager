@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sign Up</title>
+  <link rel="stylesheet" href="/static/authView/style/signUp.css"/>
+  <script type='module' src="/static/authView/scripts/signUp.js"></script>
+  <title>Register</title>
 </head>
 <body>
-  <a href="./index.html">return to login</a>
   <div class="container">
+    <div>
     <h2>Sign Up</h2>
-
-    <form>
-      <label for="name">Full Name:</label>
-      <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+    <form id='sign-up-form'>
+      <label for="name">Username:</label>
+      <input type="text" id="username" name="name" required>
 
       <label for="email">Email Address:</label>
       <input type="email" id="email" name="email" required>
@@ -23,7 +26,10 @@
       <input type="password" id="confirm-password" name="confirm-password" required>
       <button type="submit">Sign Up</button>
     </form>
+    </div>
+    <div>
+    <a href="/">return to login</a>
+    </div>
   </div>
-
 </body>
 </html>
