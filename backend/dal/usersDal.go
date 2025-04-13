@@ -31,9 +31,10 @@ func UserLogin(username string, password string) (models.User, error) {
 
 	var user models.User
 
-	query := "SELECT username, password, email FROM users WHERE username = ?"
+	query := "SELECT id, username, password, email FROM users WHERE username = ?"
 
 	value := connection.QueryRow(query, strings.TrimSpace(username)).Scan(
+		&user.Id,
 		&user.Username,
 		&user.Password,
 		&user.Email)
@@ -47,7 +48,6 @@ func UserLogin(username string, password string) (models.User, error) {
 	if comparePass != nil {
 		return user, errors.New("password is incorrect")
 	}
-	fmt.Printf("User found username %s", user.Username)
 
 	return user, nil
 

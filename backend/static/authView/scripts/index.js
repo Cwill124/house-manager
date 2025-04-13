@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded',function(){
   handleLoginForm();
+  clearLocalStorage();
 });
 
 function handleLoginForm(){
@@ -9,11 +10,9 @@ function handleLoginForm(){
       e.preventDefault();
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
-      console.log(username,password);
+      clearLocalStorage();
       login(username,password);
-
     });
-
   }
 }
 
@@ -28,15 +27,18 @@ async function login(username,password){
       method : 'POST',
       headers :{
         'Content-Type' : 'application/json',
-
       },
       body: JSON.stringify(data),
     });
 
     const responseData = await response.json();
-    localStorage.setItem('jwt',responseData.access_token);
-    localStorage.setItem('refresh',responseData.refresh_token);
+    localStorage.setItem("userId",responseData.userId);
+    window.location.href = responseData.redirectTo;
   } catch(err){
     console.error(err)
   }
+}
+
+function clearLocalStorage() {
+  localStorage.clear()
 }
