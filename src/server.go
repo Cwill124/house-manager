@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	auth "house-manager-backend/restController/auth"
 	authView "house-manager-backend/viewController/auth"
+	houseSelView "house-manager-backend/viewController/houseSelection"
 	"net/http"
 )
 
@@ -17,6 +18,7 @@ func initRestApi(r *mux.Router) {
 func initViews(r *mux.Router) {
 	r.HandleFunc("/", authView.LoginViewHandler).Methods("GET")
 	r.HandleFunc("/sign-up", authView.SignUpViewHandler).Methods("GET")
+	r.HandleFunc("/house-selection-dashboard", houseSelView.HouseSelectionViewHandler).Methods("GET")
 }
 
 func main() {
